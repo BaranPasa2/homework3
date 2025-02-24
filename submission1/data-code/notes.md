@@ -16,3 +16,4 @@ Take price per pack, re-adjust the index, etc. There will be a base year.
     CPI of 1 means $1 (it's the base year)
     Changing the year would mean you need to adjust based off of the index of that year. 
 
+--> need to create a column that represents the CPI (" X dollars in year Y costs Z dollars in [insert base year])
