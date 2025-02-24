@@ -16,4 +16,12 @@ Take price per pack, re-adjust the index, etc. There will be a base year.
     CPI of 1 means $1 (it's the base year)
     Changing the year would mean you need to adjust based off of the index of that year. 
 
+#### Inflation Data
 --> need to create a column that represents the CPI (" X dollars in year Y costs Z dollars in [insert base year])
+    A dollar in 1980 will be worth a lot less than a dollar in 1913.
+        even more pronounced now with more time and high rates of inflation.
+        Earlier years of prices should be higher than their nominal values.
+        Base year nominal price should be the real price. 
+        Nominal 2012 is real 2012. 
+    2012 does not need to be the base year (listed in the HW though)
+    
