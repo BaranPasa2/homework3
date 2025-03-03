@@ -163,7 +163,7 @@ if events:
 plt.tight_layout(rect=[0, 0.03, 1, 0.97])
 
 # Display the plot
-plt.savefig('cigarette_price_tax_1970_2018.png', dpi=300, bbox_inches='tight')
+#plt.savefig('cigarette_price_tax_1970_2018.png', dpi=300, bbox_inches='tight')
 plt.show()
 
 print("Plot generated showing the average cigarette price and tax from 1970 to 2018.")
