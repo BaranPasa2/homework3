@@ -77,7 +77,7 @@ plt.tight_layout()
 plt.show()
 
 # Save the figure if needed
-#plt.savefig('cigarette_tax_changes_1970_1985.png', dpi=300, bbox_inches='tight')
+plt.savefig('cigarette_tax_changes_1970_1985.png', dpi=300, bbox_inches='tight')
 
 print("Plot generated showing the proportion of states with cigarette tax changes from 1970 to 1985.")
 
@@ -163,7 +163,7 @@ if events:
 plt.tight_layout(rect=[0, 0.03, 1, 0.97])
 
 # Display the plot
-#plt.savefig('cigarette_price_tax_1970_2018.png', dpi=300, bbox_inches='tight')
+plt.savefig('cigarette_price_tax_1970_2018.png', dpi=300, bbox_inches='tight')
 plt.show()
 
 print("Plot generated showing the average cigarette price and tax from 1970 to 2018.")

@@ -1,0 +1,38 @@
+---
+title: "Homework 3 - Submission 1"
+subtitle: "ECON 470"
+author: "Baran Pasa"
+execute:
+  echo: false
+format:
+  pdf:
+    output-file: "pasa-b-hwk3-1"
+    output-exit: "pdf"
+    code-fold: true
+    highlight-style: github
+    include-in-header:
+      text: |
+        \addtokomafont{disposition}{\rmfamily}
+
+jupyter: python3
+
+---
+
+# Homework 3 Summary Statistics and ATE Analysis 
+
+###### [Link to Github](https://github.com/BaranPasa2/homework3)
+
+#### Collecting and Cleaning Data
+
+CDC Tax Burden on Tobacco Data was collected from a provided repository and inflation data was collected from the BLI database. Raw data was downloaded and then put into real dollars using 2012 as the base year.  
+
+
+#### Summarizing the Data
+```{python}
+from submission1/analysis/summaryStats.py import *
+from submission1/analysis/summary.py import *
+```
+
+###### 1. 
+Proportion of States with a change in their cigarette tax each year from 1970 to 1985:
+![Proportion of States with a Change in Cigarette tax, 1970-1985](cigarette_tax_changes_1970_1985.png){fig-align="left"}
