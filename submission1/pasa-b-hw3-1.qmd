@@ -26,8 +26,9 @@ jupyter: python3
 
 CDC Tax Burden on Tobacco Data was collected from a provided repository and inflation data was collected from the BLI database. Raw data was downloaded and then put into real dollars using 2012 as the base year.  
 
+{{< pagebreak >}}
 
-#### Summarizing the Data
+## 1. Summarizing the Data
 ```{python}
 #| echo: false
 #| warning: false
@@ -41,10 +42,8 @@ df = pd.read_pickle('/Users/baranpasa/Library/Mobile Documents/com~apple~CloudDo
 df['tax_2012_dollars'] = df['tax_dollar'] / df['price_cpi'] * 2.42
 ```
 
-## 1. Tax Changes Over Time (1970-1985)
 
-
-###### 1. Proportion of States with a change in their cigarette tax each year from 1970 to 1985
+### 1.1 Proportion of States with a change in their cigarette tax each year from 1970 to 1985
 
 As seen in the figure below, there is a large spike in proportion of states at 1983. It is possible that this conincides with a major policy shift on cigarettes. 
 ```{python}
@@ -65,7 +64,9 @@ plt.tight_layout()
 plt.show()
 
 ```
-###### 2. Average Price per Pack, 1970-2018 (in 2012 dolalrs)
+{{< pagebreak >}}
+
+### 1.2 Average Price per Pack, 1970-2018 (in 2012 dolalrs)
 
 While both tax and price per pack have risen in past years, price per pack has grown exponentially more. This makes sense as the government has tried to use economic disincentives to sway people away from cigarettes. 
 ```{python}
@@ -84,8 +85,9 @@ plt.legend()
 plt.tight_layout()
 plt.show()
 ```
+{{< pagebreak >}}
 
-###### 3. Top 5 states with highest increases in cigarette prices
+### 1.3 Top 5 states with highest increases in cigarette prices
 
 In the top 5 states with the highest price increases, there has been a significant decrease in the number of packs per person. This might point to some movement in the right direction for policy makers. 
 ```{python}
@@ -108,9 +110,10 @@ plt.tight_layout()
 plt.show()
 
 ```
+{{< pagebreak >}}
 
 
-###### 4. Top 5 states with lowes increases in cigarette prices
+### 1.4 Top 5 states with lowes increases in cigarette prices
 
 Decline in the top 5 states with the lowest increases mimic the previous graph, just a higher number of packs per person. While they directionally are comaprable, their scales are different.  
 ```{python}
@@ -130,8 +133,9 @@ plt.tight_layout()
 plt.show()
 
 ```
+{{< pagebreak >}}
 
-###### 5. Comparison of trends between these 10 states:
+### 1.5 Comparison of trends between these 10 states:
 Contrasting the 10 states, it is easier to see the differences between the states with the highest taxes and those with the lowest. These graphs do show some indication that increasing the tax burden might decrease the number of packs per person, but there are many outside variables that have not been taken into account. 
 
 ```{python}
