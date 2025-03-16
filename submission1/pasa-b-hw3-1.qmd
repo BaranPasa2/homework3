@@ -29,6 +29,9 @@ CDC Tax Burden on Tobacco Data was collected from a provided repository and infl
 
 #### Summarizing the Data
 ```{python}
+#| echo: false
+#| warning: false
+#| message: false
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -41,9 +44,13 @@ df['tax_2012_dollars'] = df['tax_dollar'] / df['price_cpi'] * 2.42
 ## 1. Tax Changes Over Time (1970-1985)
 
 
-###### 1. 
-Proportion of States with a change in their cigarette tax each year from 1970 to 1985:
+###### 1. Proportion of States with a change in their cigarette tax each year from 1970 to 1985
+
+As seen in the figure below, there is a large spike in proportion of states at 1983. It is possible that this conincides with a major policy shift on cigarettes. 
 ```{python}
+#| echo: false
+#| warning: false
+#| message: false
 df_early = df[(df['Year'] >= 1970) & (df['Year'] <= 1985)]
 df_early['tax_change'] = df_early.groupby('state')['tax_dollar'].diff().fillna(0) != 0
 tax_change_per_year = df_early.groupby('Year')['tax_change'].mean() * 100
@@ -58,9 +65,13 @@ plt.tight_layout()
 plt.show()
 
 ```
-###### 2.
-Average Price per Pack, 1970-2018 (in 2012 dolalrs)
+###### 2. Average Price per Pack, 1970-2018 (in 2012 dolalrs)
+
+While both tax and price per pack have risen in past years, price per pack has grown exponentially more. This makes sense as the government has tried to use economic disincentives to sway people away from cigarettes. 
 ```{python}
+#| echo: false
+#| warning: false
+#| message: false
 avg_by_year = df.groupby('Year').agg({'tax_2012_dollars': 'mean', 'cost_per_pack': 'mean'}).reset_index()
 
 plt.figure(figsize=(10, 6))
@@ -74,9 +85,13 @@ plt.tight_layout()
 plt.show()
 ```
 
-###### 3.
-Top 5 states with highest increases in cigarette prices:
+###### 3. Top 5 states with highest increases in cigarette prices
+
+In the top 5 states with the highest price increases, there has been a significant decrease in the number of packs per person. This might point to some movement in the right direction for policy makers. 
 ```{python}
+#| echo: false
+#| warning: false
+#| message: false
 price_change = df.groupby('state')['cost_per_pack'].agg(['first', 'last'])
 price_change['increase'] = price_change['last'] - price_change['first']
 top5_states = price_change.sort_values(by='increase', ascending=False).head(5).index.tolist()
@@ -95,9 +110,13 @@ plt.show()
 ```
 
 
-###### 4.
-Top 5 states with lowes increases in cigarette prices:
+###### 4. Top 5 states with lowes increases in cigarette prices
+
+Decline in the top 5 states with the lowest increases mimic the previous graph, just a higher number of packs per person. While they directionally are comaprable, their scales are different.  
 ```{python}
+#| echo: false
+#| warning: false
+#| message: false
 bottom5_states = price_change.sort_values(by='increase').head(5).index.tolist()
 df_bottom5 = df[df['state'].isin(bottom5_states)]
 
@@ -112,9 +131,13 @@ plt.show()
 
 ```
 
-###### 5. 
-Comparison of trens between these 10 states:
+###### 5. Comparison of trends between these 10 states:
+Contrasting the 10 states, it is easier to see the differences between the states with the highest taxes and those with the lowest. These graphs do show some indication that increasing the tax burden might decrease the number of packs per person, but there are many outside variables that have not been taken into account. 
+
 ```{python}
+#| echo: false
+#| warning: false
+#| message: false
 avg_sales_top = df_top5.groupby('Year')['sales_per_capita'].mean().reset_index()
 avg_sales_bottom = df_bottom5.groupby('Year')['sales_per_capita'].mean().reset_index()
 
