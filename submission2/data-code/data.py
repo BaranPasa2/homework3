@@ -2,8 +2,6 @@ import pandas as pd
 import numpy as np
 import os
 
-# Install packages if needed - in Python we typically use pip or conda
-# pip install pandas numpy matplotlib seaborn openpyxl
 
 # Load the data
 cig_data = pd.read_csv("submission2/data/input/taxTobaccoData.csv")
@@ -27,18 +25,15 @@ cig_data = cig_data.rename(columns={
 
 cig_data = cig_data[['state_abb', 'state', 'Year', 'value', 'measure']]
 
-# Pivot wider - equivalent to pivot_wider in R
 final_data = cig_data.pivot_table(
     index=['state', 'Year'],
     columns='measure',
     values='value'
 ).reset_index()
 
-# Sort the data
 final_data = final_data.sort_values(['state', 'Year'])
 
-# Clean CPI data
-# Equivalent to pivot_longer in R
+
 cpi_data_melted = pd.melt(
     cpi_data,
     id_vars=['Year'],
@@ -47,20 +42,17 @@ cpi_data_melted = pd.melt(
     value_name='index'
 )
 
-# Group by year and calculate mean index
 cpi_data = cpi_data_melted.groupby('Year')['index'].mean().reset_index()
 
-# Form final dataset
-# Merge dataframes - equivalent to left_join in R
+
 final_data = pd.merge(final_data, cpi_data, on='Year', how='left')
 
 # Adjust to 2010 dollars
-final_data['price_cpi'] = final_data['cost_per_pack'] * (230 / final_data['index'])
+final_data['price_cpi'] = final_data['cost_per_pack'] * (final_data.loc[final_data['Year'] == 2010, 'index'].iloc[0] / final_data['index'])
 
 # Write output files
 final_data.to_csv("submission2/data/output/TaxBurden_Data.txt", sep='\t', index=False)
 
-# For RDS equivalent, we can use pickle or joblib in Python
 import pickle
 with open("submission2/data/output/TaxBurden_Data.pkl", 'wb') as f:
     pickle.dump(final_data, f)

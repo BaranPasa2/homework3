@@ -9,9 +9,8 @@ sns.set(style="whitegrid")
 df = pd.read_pickle('submission2/data/output/TaxBurden_Data.pkl')
 
 # --- Task 1 ---
-# Proportion of states with tax changes (1970-1985)
 df_early = df[(df['Year'] >= 1970) & (df['Year'] <= 1985)]
-df_early['tax_change'] = df_early.groupby('state')['tax_dollar'].diff().fillna(0) != 0
+df_early['tax_change'] = df_early.sort_values(['state', "Year"]).groupby(['state'])['tax_state'].diff().fillna(0) != 0
 tax_change_per_year = df_early.groupby('Year')['tax_change'].mean() * 100  # to %
 
 plt.figure(figsize=(12, 6))
@@ -24,7 +23,6 @@ plt.tight_layout()
 plt.show()
 
 # --- Task 2 ---
-# Average tax (adjusted to 2012 dollars) and price per pack (1970-2018)
 df['tax_2012_dollars'] = df['tax_dollar'] / df['price_cpi'] * 2.42  # CPI normalization
 avg_by_year = df.groupby('Year').agg({'tax_2012_dollars': 'mean', 'cost_per_pack': 'mean'}).reset_index()
 
@@ -39,7 +37,6 @@ plt.tight_layout()
 plt.show()
 
 # --- Task 3 ---
-# Top 5 states by cigarette price increase and their sales per capita
 price_change = df.groupby('state')['cost_per_pack'].agg(['first', 'last'])
 price_change['increase'] = price_change['last'] - price_change['first']
 top5_states = price_change.sort_values(by='increase', ascending=False).head(5).index.tolist()
@@ -55,7 +52,6 @@ plt.tight_layout()
 plt.show()
 
 # --- Task 4 ---
-# Bottom 5 states by price increase and their sales per capita
 bottom5_states = price_change.sort_values(by='increase').head(5).index.tolist()
 
 df_bottom5 = df[df['state'].isin(bottom5_states)]
@@ -69,7 +65,6 @@ plt.tight_layout()
 plt.show()
 
 # --- Task 5 ---
-# Comparison of trends in average sales (top vs bottom 5 states)
 avg_sales_top = df_top5.groupby('Year')['sales_per_capita'].mean().reset_index()
 avg_sales_bottom = df_bottom5.groupby('Year')['sales_per_capita'].mean().reset_index()
 
