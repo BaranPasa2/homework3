@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 sns.set(style="whitegrid")
 
 # Load the data
-df = pd.read_pickle('submission2/data/output/TaxBurden_Data.pkl')
+df = pd.read_pickle('submission3/data/output/TaxBurden_Data.pkl')
 
 # --- Task 1 ---
 df_early = df[(df['Year'] >= 1970) & (df['Year'] <= 1985)]
