@@ -1,12 +1,12 @@
 ---
-title: "Homework 3 - Submission 2"
+title: "Homework 3 - Submission 3"
 subtitle: "ECON 470"
 author: "Baran Pasa"
 execute:
   echo: false
 format:
   pdf:
-    output-file: "pasa-b-hwk3-2"
+    output-file: "pasa-b-hwk3-3"
     output-exit: "pdf"
     code-fold: true
     highlight-style: github
