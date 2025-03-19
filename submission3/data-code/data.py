@@ -48,7 +48,7 @@ cpi_data = cpi_data_melted.groupby('Year')['index'].mean().reset_index()
 final_data = pd.merge(final_data, cpi_data, on='Year', how='left')
 
 # Adjust to 2010 dollars
-final_data['price_cpi'] = final_data['cost_per_pack'] * (final_data.loc[final_data['Year'] == 2010, 'index'].iloc[0] / final_data['index'])
+final_data['price_cpi'] = final_data['cost_per_pack'] * (final_data.loc[final_data['Year'] == 2012, 'index'].iloc[0] / final_data['index'])
 
 # Write output files
 final_data.to_csv("submission2/data/output/TaxBurden_Data.txt", sep='\t', index=False)

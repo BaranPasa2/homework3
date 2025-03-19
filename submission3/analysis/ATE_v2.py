@@ -6,7 +6,7 @@ df = pd.read_pickle('submission2/data/output/TaxBurden_Data.pkl')
 
 # Create log variables
 df['log_sales'] = np.log(df['sales_per_capita'])
-df['log_price'] = np.log(df['cost_per_pack'])
+df['log_price'] = np.log(df['price_cpi'])
 
 # Filter datasets by year
 df_70_90 = df[(df['Year'] >= 1970) & (df['Year'] <= 1990)].copy()

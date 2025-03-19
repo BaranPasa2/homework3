@@ -176,7 +176,7 @@ df = pd.read_pickle('/Users/baranpasa/Library/Mobile Documents/com~apple~CloudDo
 
 # Create log variables
 df['log_sales'] = np.log(df['sales_per_capita'])
-df['log_price'] = np.log(df['cost_per_pack'])
+df['log_price'] = np.log(df['price_cpi'])
 
 # Filter datasets by year
 df_70_90 = df[(df['Year'] >= 1970) & (df['Year'] <= 1990)].copy()
@@ -184,13 +184,14 @@ df_91_15 = df[(df['Year'] >= 1991) & (df['Year'] <= 2015)].copy()
 ```
 
 ### 6. 
+
 ```{python}
 # OLS regression: log_sales ~ log_price
 ols_70_90 = pf.feols('log_sales ~ log_price', data=df_70_90)
 print(ols_70_90.summary())
 
 ```
-
+With a log_price coefficient of -0.172, the regression indicates that for every 1 unit increase of price, sales decrease by -0.172 units. This does make sense, as an increase in price should decrease the demand. 
 ### 7.
 ```{python}
 #| echo: false
