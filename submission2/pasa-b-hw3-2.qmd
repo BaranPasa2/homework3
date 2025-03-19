@@ -6,7 +6,7 @@ execute:
   echo: false
 format:
   pdf:
-    output-file: "pasa-b-hwk3-1"
+    output-file: "pasa-b-hwk3-2"
     output-exit: "pdf"
     code-fold: true
     highlight-style: github
@@ -65,6 +65,8 @@ plt.tight_layout()
 plt.show()
 
 ```
+##### Update for submission 2: 
+A fix in the data.py code made for this bar graph to accurately display the data. 
 {{< pagebreak >}}
 
 ### 2. Average Price per Pack, 1970-2018 (in 2012 dolalrs)
@@ -160,6 +162,8 @@ plt.show()
 
 
 ## ATE
+
+For submission 2, I switched over to the pyfixest model, making it much easier to run my regressions. 
 
 ```{python}
 #| echo: false
