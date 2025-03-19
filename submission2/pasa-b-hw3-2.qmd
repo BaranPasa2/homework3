@@ -165,10 +165,20 @@ plt.show()
 #| warning: false
 #| message: false
 import pyfixest as pf
+# Load data
+df = pd.read_pickle('/Users/baranpasa/Library/Mobile Documents/com~apple~CloudDocs/Desktop/Emory/Junior Year/Junior Spring/ECON 470/ECON 470 Python /homework3/submission2/data/output/TaxBurden_Data.pkl')
+
+# Create log variables
+df['log_sales'] = np.log(df['sales_per_capita'])
+df['log_price'] = np.log(df['cost_per_pack'])
+
+# Filter datasets by year
+df_70_90 = df[(df['Year'] >= 1970) & (df['Year'] <= 1990)].copy()
+df_91_15 = df[(df['Year'] >= 1991) & (df['Year'] <= 2015)].copy()
 ```
 
 ### 2.1
-```{Python}
+```{python}
 # OLS regression: log_sales ~ log_price
 ols_70_90 = pf.feols('log_sales ~ log_price', data=df_70_90)
 print(ols_70_90.summary())
@@ -176,7 +186,7 @@ print(ols_70_90.summary())
 ```
 
 ### 2.2
-```{Python}
+```{python}
 #| echo: false
 #| warning: false
 #| message: false
@@ -187,7 +197,7 @@ print(iv_70_90.summary())
 ```
 
 ### 2.3
-```{Python}
+```{python}
 #| echo: false
 #| warning: false
 #| message: false
@@ -200,7 +210,7 @@ print(reduced_form.summary())
 ```
 
 ### 2.4
-```{Python}
+```{python}
 #| echo: false
 #| warning: false
 #| message: false
@@ -213,7 +223,7 @@ print(iv_91_15.summary())
 ```
 
 ### 2.5
-```{Python}
+```{python}
 #| echo: false
 #| warning: false
 #| message: false
