@@ -39,7 +39,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 sns.set(style="whitegrid")
-df = pd.read_pickle('/Users/baranpasa/Library/Mobile Documents/com~apple~CloudDocs/Desktop/Emory/Junior Year/Junior Spring/ECON 470/ECON 470 Python /homework3/submission2/data/output/TaxBurden_Data.pkl')
+df = pd.read_pickle('/Users/baranpasa/Library/Mobile Documents/com~apple~CloudDocs/Desktop/Emory/Junior Year/Junior Spring/ECON 470/ECON 470 Python /homework3/submission3/data/output/TaxBurden_Data.pkl')
 df['tax_2012_dollars'] = df['tax_dollar'] / df['price_cpi'] * 2.42
 ```
 
