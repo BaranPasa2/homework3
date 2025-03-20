@@ -190,7 +190,7 @@ df_91_15 = df[(df['Year'] >= 1991) & (df['Year'] <= 2015)].copy()
 #print(df_70_90.index)
 ```
 
-### 6. 
+### 6. Regressing Log Sales on Log Prices 1970 - 1990
 
 ```{python}
 # OLS regression: log_sales ~ log_price
@@ -201,7 +201,7 @@ pf.etable(ols_70_90, omit_stats='all', se=False)
 With a log_price coefficient of -0.172, the regression indicates that for every 1 unit increase of price, sales decrease by -0.172 units. This does make sense, as an increase in price should decrease the demand. 
 
 
-### 7.
+### 7. IV: Regressing Log Sales on Log Prices using Log Total Tax 1970 - 1990
 ```{python}
 #| echo: false
 #| warning: false
@@ -213,33 +213,61 @@ pf.etable(iv_70_90, omit_stats='all', se=False)
 
 ```
 
-### 8.
+### 8. First Stage and Reduced Form Instrument Results
 ```{python}
 #| echo: false
 #| warning: false
 #| message: false
-first_stage = pf.feols('log_price ~ log_total_tax', data=df_70_90)
+first_stage_90 = pf.feols('log_price ~ log_total_tax', data=df_70_90)
 #print(first_stage.summary())
-pf.etable(first_stage, omit_stats='all', se=False)
+pf.etable(first_stage_90, omit_stats='all', se=False)
 
-reduced_form = pf.feols('log_sales ~ tax_dollar', data=df_70_90)
-pf.etable(reduced_form, omit_stats='all', se=False)
+reduced_form_90 = pf.feols('log_sales ~ log_total_tax', data=df_70_90)
+pf.etable(reduced_form_90, omit_stats='all', se=False)
 
 ```
 
-### 9.
+### 9. Repeating the above steps, but for 1991-2015
 ```{python}
 #| echo: false
 #| warning: false
 #| message: false
 ols_91_15 = pf.feols('log_sales ~ log_price', data=df_91_15)
 #print(ols_91_15.summary())
-
 iv_91_15 = pf.feols('log_sales ~ 1 | log_price ~ log_total_tax', data=df_91_15)
+
+first_stage_15 = pf.feols('log_price ~ log_total_tax', data=df_91_15)
+reduced_form_15 = pf.feols('log_sales ~ log_total_tax', data=df_91_15)
+
+
 etable = pf.etable(
-    [ols_70_90, iv_70_90, ols_91_15, iv_91_15, first_stage, reduced_form],
+    [ols_70_90, ols_91_15, iv_70_90, iv_91_15],
     title=["1970–1990 Sample", "1991–2015 Sample"],
     subheaders=["OLS Estimate", "IV Estimate"],  # or other context if needed
+    digits=3,
+    signif_stars=True,
+    signif_levels=[0.01, 0.05, 0.1],
+    
+    # Remove fixed effects
+    omit_fe=True,
+    
+    # Keep only R² and N (omit all others)
+    omit_stats=["adj_r2", "fstat"],  # You can also do ["all"] and then add custom rows
+    
+    # Style the table for minimal look
+    style="latex"
+)
+
+etable = etable.tab_header(
+    title="Regression Results: OLS and IV Across Different Time Periods",
+    subtitle="Estimates of log_sales ~ log_price with and without Instrumenting via Total Tax"
+)
+etable
+
+etable = pf.etable(
+    [first_stage_90, reduced_form_90],
+    title=["1970–1990 Sample", "1991–2015 Sample"],
+    subheaders=["First Stage", "Reduced Form"],  # or other context if needed
     digits=3,
     signif_stars=True,
     signif_levels=[0.01, 0.05, 0.1],
