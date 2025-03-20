@@ -235,7 +235,7 @@ ols_91_15 = pf.feols('log_sales ~ log_price', data=df_91_15)
 
 iv_91_15 = pf.feols('log_sales ~ 1 | log_price ~ log_total_tax', data=df_91_15)
 pf.etable([iv_91_15, ols_91_15], omit_stats='all', se=False)
-pf.etable([ols_70_90, ols_91_15], omit_stats='all', se=False, subheaders=["1970-1990"])
+pf.etable([ols_70_90, ols_91_15], se=False, title=["Regression 1: Price ~ Tax", "Regression 2: Sales ~ Pricehat"], subheaders=["1970-1990"])
 
 ```
 
