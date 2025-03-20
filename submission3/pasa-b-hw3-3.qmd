@@ -228,6 +228,11 @@ pf.etable(reduced_form_90, omit_stats='all', se=False)
 ```
 
 ### 9. Repeating the above steps, but for 1991-2015
+
+Specify which one is each number. 
+(1) -> 
+(2) ->
+etc.
 ```{python}
 #| echo: false
 #| warning: false
@@ -240,54 +245,8 @@ first_stage_15 = pf.feols('log_price ~ log_total_tax', data=df_91_15)
 reduced_form_15 = pf.feols('log_sales ~ log_total_tax', data=df_91_15)
 
 
-etable = pf.etable(
-    [ols_70_90, ols_91_15, iv_70_90, iv_91_15],
-    title=["1970–1990 Sample", "1991–2015 Sample"],
-    subheaders=["OLS Estimate", "IV Estimate"],  # or other context if needed
-    digits=3,
-    signif_stars=True,
-    signif_levels=[0.01, 0.05, 0.1],
-    
-    # Remove fixed effects
-    omit_fe=True,
-    
-    # Keep only R² and N (omit all others)
-    omit_stats=["adj_r2", "fstat"],  # You can also do ["all"] and then add custom rows
-    
-    # Style the table for minimal look
-    style="minimal"
-)
 
-etable = etable.tab_header(
-    title=["OLS 1970-1990", "OLS 1991 - 2015", "IV 1970-1990", "IV 1991-2015"]
-#    subtitle="Estimates of log_sales ~ log_price with and without Instrumenting via Total Tax"
-)
 etable
-```
-```{python}
-etable_2 = pf.etable(
-    [first_stage_90, reduced_form_90],
-    title=["1970–1990 Sample", "1991–2015 Sample"],
-    subheaders=["First Stage", "Reduced Form"],  # or other context if needed
-    digits=3,
-    signif_stars=True,
-    signif_levels=[0.01, 0.05, 0.1],
-    
-    # Remove fixed effects
-    omit_fe=True,
-    
-    # Keep only R² and N (omit all others)
-    omit_stats=["adj_r2", "fstat"],  # You can also do ["all"] and then add custom rows
-    
-    # Style the table for minimal look
-    style="minimal"
-)
-
-etable_2 = etable_2.tab_header(
-    title="Regression Results: OLS and IV Across Different Time Periods",
-    subtitle="Estimates of log_sales ~ log_price with and without Instrumenting via Total Tax"
-)
-etable_2
 ```
 
 ### 10. Further Interpretations
