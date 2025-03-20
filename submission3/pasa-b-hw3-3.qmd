@@ -37,6 +37,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
+from IPython.display import display, Markdown
 
 sns.set(style="whitegrid")
 df = pd.read_pickle('/Users/baranpasa/Library/Mobile Documents/com~apple~CloudDocs/Desktop/Emory/Junior Year/Junior Spring/ECON 470/ECON 470 Python /homework3/submission3/data/output/TaxBurden_Data.pkl')
@@ -116,7 +117,7 @@ plt.show()
 {{< pagebreak >}}
 
 
-### 4. Top 5 states with lowes increases in cigarette prices
+### 4. Top 5 states with lowest increases in cigarette prices
 
 Decline in the top 5 states with the lowest increases mimic the previous graph, just a higher number of packs per person. While they directionally are comaprable, their scales are different.  
 ```{python}
@@ -179,8 +180,14 @@ df['log_sales'] = np.log(df['sales_per_capita'])
 df['log_price'] = np.log(df['price_cpi'])
 
 # Filter datasets by year
+df['log_sales'] = np.log(df['sales_per_capita'])
+df['log_price'] = np.log(df['price_cpi'])
+df['log_total_tax'] = np.log(df['tax_dollar']*(218/(df.index + 1)))
+
 df_70_90 = df[(df['Year'] >= 1970) & (df['Year'] <= 1990)].copy()
 df_91_15 = df[(df['Year'] >= 1991) & (df['Year'] <= 2015)].copy()
+#print(df_70_90.columns)
+#print(df_70_90.index)
 ```
 
 ### 6. 
@@ -188,8 +195,8 @@ df_91_15 = df[(df['Year'] >= 1991) & (df['Year'] <= 2015)].copy()
 ```{python}
 # OLS regression: log_sales ~ log_price
 ols_70_90 = pf.feols('log_sales ~ log_price', data=df_70_90)
-print(ols_70_90.summary())
-
+#print(ols_70_90.summary())
+pf.etable(ols_70_90, omit_stats='all', se=False)
 ```
 With a log_price coefficient of -0.172, the regression indicates that for every 1 unit increase of price, sales decrease by -0.172 units. This does make sense, as an increase in price should decrease the demand. 
 ### 7.
@@ -198,8 +205,8 @@ With a log_price coefficient of -0.172, the regression indicates that for every 
 #| warning: false
 #| message: false
 # IV regression: instrument log_price with tax_dollar
-iv_70_90 = pf.feols('log_sales ~ 1 | log_price ~ tax_dollar', data=df_70_90)
-print(iv_70_90.summary())
+iv_70_90 = pf.feols('log_sales ~ 1 | log_price ~ log_total_tax', data=df_70_90)
+# print(iv_70_90.summary())
 pf.etable(iv_70_90, omit_stats='all', se=False)
 
 ```
@@ -209,11 +216,12 @@ pf.etable(iv_70_90, omit_stats='all', se=False)
 #| echo: false
 #| warning: false
 #| message: false
-first_stage = pf.feols('log_price ~ tax_dollar', data=df_70_90)
-print(first_stage.summary())
+first_stage = pf.feols('log_price ~ log_total_tax', data=df_70_90)
+#print(first_stage.summary())
+pf.etable(first_stage, omit_stats='all', se=False)
 
 reduced_form = pf.feols('log_sales ~ tax_dollar', data=df_70_90)
-print(reduced_form.summary())
+pf.etable(reduced_form, omit_stats='all', se=False)
 
 ```
 
@@ -223,17 +231,12 @@ print(reduced_form.summary())
 #| warning: false
 #| message: false
 ols_91_15 = pf.feols('log_sales ~ log_price', data=df_91_15)
-print(ols_91_15.summary())
+#print(ols_91_15.summary())
 
-iv_91_15 = pf.feols('log_sales ~ 1 | log_price ~ tax_dollar', data=df_91_15)
-print(iv_91_15.summary())
-
-```
-
-### 10.
-```{python}
-#| echo: false
-#| warning: false
-#| message: false
+iv_91_15 = pf.feols('log_sales ~ 1 | log_price ~ log_total_tax', data=df_91_15)
+pf.etable([iv_91_15, ols_91_15], omit_stats='all', se=False)
+pf.etable([ols_70_90, ols_91_15], omit_stats='all', se=False, subheaders=["1970-1990"])
 
 ```
+
+### 10. Further Interpretations
