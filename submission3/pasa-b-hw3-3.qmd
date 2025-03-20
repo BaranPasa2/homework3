@@ -200,6 +200,7 @@ With a log_price coefficient of -0.172, the regression indicates that for every 
 # IV regression: instrument log_price with tax_dollar
 iv_70_90 = pf.feols('log_sales ~ 1 | log_price ~ tax_dollar', data=df_70_90)
 print(iv_70_90.summary())
+pf.etable(iv_70_90, omit_stats='all', se=False)
 
 ```
 
