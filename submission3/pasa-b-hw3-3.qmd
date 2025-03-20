@@ -255,16 +255,17 @@ etable = pf.etable(
     omit_stats=["adj_r2", "fstat"],  # You can also do ["all"] and then add custom rows
     
     # Style the table for minimal look
-    style="latex"
+    style="minimal"
 )
 
 etable = etable.tab_header(
-    title="Regression Results: OLS and IV Across Different Time Periods",
-    subtitle="Estimates of log_sales ~ log_price with and without Instrumenting via Total Tax"
+    title=["OLS 1970-1990", "OLS 1991 - 2015", "IV 1970-1990", "IV 1991-2015"]
+#    subtitle="Estimates of log_sales ~ log_price with and without Instrumenting via Total Tax"
 )
 etable
-
-etable = pf.etable(
+```
+```{python}
+etable_2 = pf.etable(
     [first_stage_90, reduced_form_90],
     title=["1970–1990 Sample", "1991–2015 Sample"],
     subheaders=["First Stage", "Reduced Form"],  # or other context if needed
@@ -279,14 +280,14 @@ etable = pf.etable(
     omit_stats=["adj_r2", "fstat"],  # You can also do ["all"] and then add custom rows
     
     # Style the table for minimal look
-    style="latex"
+    style="minimal"
 )
 
-etable = etable.tab_header(
+etable_2 = etable_2.tab_header(
     title="Regression Results: OLS and IV Across Different Time Periods",
     subtitle="Estimates of log_sales ~ log_price with and without Instrumenting via Total Tax"
 )
-etable
+etable_2
 ```
 
 ### 10. Further Interpretations
