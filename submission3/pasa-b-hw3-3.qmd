@@ -236,13 +236,29 @@ ols_91_15 = pf.feols('log_sales ~ log_price', data=df_91_15)
 #print(ols_91_15.summary())
 
 iv_91_15 = pf.feols('log_sales ~ 1 | log_price ~ log_total_tax', data=df_91_15)
-pf.etable(
-    [ols_70_90, iv_70_90, ols_91_15, iv_91_15],
-    omit_stats="all",
-    title=["OLS: log_sales ~ log_price", "IV: log_sales ~ log_price (instrumented)"],
-    subheaders=["No instrument", "Instrument: total_tax"]
+etable = pf.etable(
+    [ols_70_90, iv_70_90, ols_91_15, iv_91_15, first_stage, reduced_form],
+    title=["1970–1990 Sample", "1991–2015 Sample"],
+    subheaders=["OLS Estimate", "IV Estimate"],  # or other context if needed
+    digits=3,
+    signif_stars=True,
+    signif_levels=[0.01, 0.05, 0.1],
+    
+    # Remove fixed effects
+    omit_fe=True,
+    
+    # Keep only R² and N (omit all others)
+    omit_stats=["adj_r2", "fstat"],  # You can also do ["all"] and then add custom rows
+    
+    # Style the table for minimal look
+    style="latex"
 )
 
+etable = etable.tab_header(
+    title="Regression Results: OLS and IV Across Different Time Periods",
+    subtitle="Estimates of log_sales ~ log_price with and without Instrumenting via Total Tax"
+)
+etable
 ```
 
 ### 10. Further Interpretations
