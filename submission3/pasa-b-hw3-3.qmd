@@ -58,7 +58,7 @@ tax_change_per_year = df_early.groupby('Year')['tax_change'].mean() * 100  # to 
 
 plt.figure(figsize=(12, 6))
 sns.barplot(x=tax_change_per_year.index, y=tax_change_per_year.values, palette="Blues_d")
-plt.title('Proportion of States with Cigarette Tax Change (1970-1985)', fontsize=14)
+plt.title('Figure 1. Proportion of States with Cigarette Tax Change (1970-1985)', fontsize=14)
 plt.ylabel('Proportion of States (%)')
 plt.xlabel('Year')
 plt.xticks(rotation=45)
@@ -66,10 +66,9 @@ plt.tight_layout()
 plt.show()
 
 ```
-##### Update for submission 2: 
-A fix in the data.py code made for this bar graph to accurately display the data. 
-{{< pagebreak >}}
 
+
+{{< pagebreak >}}
 ### 2. Average Price per Pack, 1970-2018 (in 2012 dolalrs)
 
 While both tax and price per pack have risen in past years, price per pack has grown exponentially more. This makes sense as the government has tried to use economic disincentives to sway people away from cigarettes. 
@@ -82,7 +81,7 @@ avg_by_year = df.groupby('Year').agg({'tax_2012_dollars': 'mean', 'cost_per_pack
 plt.figure(figsize=(10, 6))
 sns.lineplot(data=avg_by_year, x='Year', y='tax_2012_dollars', label='Avg Tax (2012 $)', color='orange')
 sns.lineplot(data=avg_by_year, x='Year', y='cost_per_pack', label='Avg Price per Pack', color='blue')
-plt.title('Average Tax (2012 Dollars) and Price per Pack (1970-2018)')
+plt.title('Figure 2. Average Tax (2012 Dollars) and Price per Pack (1970-2018)')
 plt.ylabel('Dollars')
 plt.xlabel('Year')
 plt.legend()
@@ -106,7 +105,7 @@ df_top5 = df[df['state'].isin(top5_states)]
 
 plt.figure(figsize=(10, 6))
 sns.lineplot(data=df_top5, x='Year', y='sales_per_capita', hue='state', palette='Set1')
-plt.title('Packs Sold per Capita - Top 5 States with Highest Price Increases')
+plt.title('Figure 3. Packs Sold per Capita - Top 5 States with Highest Price Increases')
 plt.ylabel('Packs per Capita')
 plt.xlabel('Year')
 plt.legend(title='State')
@@ -129,7 +128,7 @@ df_bottom5 = df[df['state'].isin(bottom5_states)]
 
 plt.figure(figsize=(10, 6))
 sns.lineplot(data=df_bottom5, x='Year', y='sales_per_capita', hue='state', palette='Set2')
-plt.title('Packs Sold per Capita - Bottom 5 States with Lowest Price Increases')
+plt.title('Figure 4. Packs Sold per Capita - Bottom 5 States with Lowest Price Increases')
 plt.ylabel('Packs per Capita')
 plt.xlabel('Year')
 plt.legend(title='State')
@@ -140,7 +139,9 @@ plt.show()
 {{< pagebreak >}}
 
 ### 5. Comparison of trends between these 10 states:
-Contrasting the 10 states, it is easier to see the differences between the states with the highest taxes and those with the lowest. These graphs do show some indication that increasing the tax burden might decrease the number of packs per person, but there are many outside variables that have not been taken into account. 
+Contrasting the 10 states, it is easier to see the differences between the states with the highest taxes and those with the lowest. These graphs do show some indication that increasing the tax burden might decrease the number of packs per person, but there are many outside variables that have not been taken into account.
+
+From this graph, we can extrapolate that across the country, cigarette sales decreased at a significant rate.
 
 ```{python}
 #| echo: false
@@ -152,7 +153,7 @@ avg_sales_bottom = df_bottom5.groupby('Year')['sales_per_capita'].mean().reset_i
 plt.figure(figsize=(10, 6))
 sns.lineplot(data=avg_sales_top, x='Year', y='sales_per_capita', label='Top 5 States', color='red')
 sns.lineplot(data=avg_sales_bottom, x='Year', y='sales_per_capita', label='Bottom 5 States', color='green')
-plt.title('Sales Trends: Top vs Bottom 5 Price Increase States')
+plt.title('Figure 5. Sales Trends: Top vs Bottom 5 Price Increase States')
 plt.ylabel('Average Packs Sold per Capita')
 plt.xlabel('Year')
 plt.legend()
@@ -165,7 +166,7 @@ plt.show()
 
 ## ATE
 
-For submission 2, I switched over to the pyfixest model, making it much easier to run my regressions. 
+For the following regressions I used the pyfixest model. 
 
 ```{python}
 #| echo: false
@@ -193,14 +194,19 @@ df_91_15 = df[(df['Year'] >= 1991) & (df['Year'] <= 2015)].copy()
 ### 6. Regressing Log Sales on Log Prices 1970 - 1990
 
 ```{python}
+#| echo: false
+#| warning: false
+#| message: false
 # OLS regression: log_sales ~ log_price
 ols_70_90 = pf.feols('log_sales ~ log_price', data=df_70_90)
-pf.etable(ols_70_90, omit_stats='all', se=False)
+pf.etable(ols_70_90, omit_stats='all', se=True, style='latex')
 ```
 
-With a log_price coefficient of -0.172, the regression indicates that for every 1 unit increase of price, sales decrease by -0.172 units. This does make sense, as an increase in price should decrease the demand. 
+With a price coefficient of -0.809, the regression indicates that for every 1 unit increase of price, sales decrease by 0.809 units. This does make sense, as an increase in price should decrease the demand. 
 
+It is worth noting that the p-value is very small, p < 0.001. This signifies that, within our sample data, evidence supporting the null hypothesis is very weak.
 
+{{< pagebreak >}}
 ### 7. IV: Regressing Log Sales on Log Prices using Log Total Tax 1970 - 1990
 ```{python}
 #| echo: false
@@ -209,29 +215,42 @@ With a log_price coefficient of -0.172, the regression indicates that for every 
 # IV regression: instrument log_price with tax_dollar
 iv_70_90 = pf.feols('log_sales ~ 1 | log_price ~ log_total_tax', data=df_70_90)
 # print(iv_70_90.summary())
-pf.etable(iv_70_90, omit_stats='all', se=False)
-
+pf.etable(iv_70_90, omit_stats='all', se=True, style='latex')
 ```
 
-### 8. First Stage and Reduced Form Instrument Results
+After switching from an OLS regression to using the log of Federal and State cigarette tax as an instrumental variable, the regression coefficient of price is -0.867. This is very similiar to what we got when running the OLS regression. Taking into account the standard error, we can assume that they are telling us the same result. As discussed later, however, neither regression should be trusted as accurate. 
+
+Using IV yielded a different regression result as there is some model-accuracy lost when using an insturmental variable rather than the target variable. A perfect insturmental variable would yield the same result as the original model, but there are many outside variables that could influence the relationship of total tax on price. 
+
+Again, it is worth noting that the p-value is very small, p < 0.001. This signifies that, within our sample data, evidence supporting the null hypothesis is very weak.
+
+{{< pagebreak >}}
+### 8. First Stage and Reduced-Form Instrument Results
+First Stage Regression (1) & Reduced-Form Regression (2)
 ```{python}
 #| echo: false
 #| warning: false
 #| message: false
 first_stage_90 = pf.feols('log_price ~ log_total_tax', data=df_70_90)
 #print(first_stage.summary())
-pf.etable(first_stage_90, omit_stats='all', se=False)
+#pf.etable(first_stage_90, omit_stats='all', #se=False)
 
 reduced_form_90 = pf.feols('log_sales ~ log_total_tax', data=df_70_90)
-pf.etable(reduced_form_90, omit_stats='all', se=False)
 
+pf.etable([first_stage_90, reduced_form_90], omit_stats='all', se=True, style='latex')
 ```
 
-### 9. Repeating the above steps, but for 1991-2015
 
-Specify which one is each number. 
-(1) -> 
-(2) ->
+
+{{< pagebreak >}}
+### 9. Repeating the regression above for 1991-2015
+ 
+The regressions were reran, this time with data from 1991 to 2015. Despite my best efforts to create a cohesive table, this is the most presentable I could get. 
+
+(1) -> OLS 1991 - 2015
+(2) -> IV 1991 - 2015
+(3) -> First Stage 1991 - 2015
+(4) -> Reduced Form 1991 - 2015
 etc.
 ```{python}
 #| echo: false
@@ -244,9 +263,65 @@ iv_91_15 = pf.feols('log_sales ~ 1 | log_price ~ log_total_tax', data=df_91_15)
 first_stage_15 = pf.feols('log_price ~ log_total_tax', data=df_91_15)
 reduced_form_15 = pf.feols('log_sales ~ log_total_tax', data=df_91_15)
 
-
+etable = pf.etable(
+  [ols_91_15, iv_91_15, first_stage_15, reduced_form_15],
+  omit_stats='all', se=True, style='latex'
+)
 
 etable
 ```
 
+{{< pagebreak >}}
 ### 10. Further Interpretations
+
+#### 10.1 Comparing OLS Regressions from 1970 - 1990 and 1991 - 2015
+```{python}
+pf.etable([ols_70_90, ols_91_15], omit_stats='all', se=True, style='latex')
+```
+
+When compared side-by-side we see that in both time periods, an increase in price by 1-unit results in a decrease in sales of 1-unit (-0.809 and -0.997 respectively). 
+
+The 1970-1990 OLS (1), however, has an R^2^ of 0.294. This indicates that for this time period, the price is not effectivley explaining sales. The 1991-2015 OLS (2), however, has an R^2^ of 0.561. This indicates that price is moderately explaining change in sales. Both time periods show a moderate to weak fit for price on sales.
+
+
+#### 10.2 Comparing IV Regressions from 1970 - 1990 and 1991 - 2015
+```{python}
+pf.etable([iv_70_90, iv_91_15], omit_stats='all', se=True, style='latex')
+```
+
+Using total tax on cigarettes as an instrumental varibale, both regressions yeilded a negative coefficient. The coefficient for 1991-2015 (2) is larger at -1.169 than 1970-1990's of -0.867.
+
+Looking at the graph in point 2, there is a clear exponential increase in the slope of the average price of cigarettes. The increases in average price per pack from 1991-2015 are much higher than the increases between 1970-1990. 
+
+In that same graph, the increase in average tax does not increase significantly until 2000. This leads me to believe that total tax, as collected and calculated here, is not an accurate instrumental variable for the increasing price per pack.
+
+
+### Comparing First Stage and Reduced-Form Regressions from 1970 - 1990 and 1991 - 2015
+#### First Stage Regressions:
+```{python}
+pf.etable(
+  [first_stage_90, first_stage_15], 
+  omit_stats='all', 
+  se=True, style='latex')
+```
+
+Running the 1970-1990 first stage regression, price (1) yielded a total tax coefficient of 0.044. This indicates that a 1-unit increase in total tax would lead to a 0.044 increase in cigarette price. If true, this increase would have little impact out in the real world.
+
+Looking at the reduced form regression (2), the  total tax coefficient on sales is -0.038. Accordning to the model, a 1-uint increase in total tax would lead to a 0.169 unit increase in price. While this regression coefficient is more significant than the 1970-1990 coefficient, it still does not explain the large difference in increases seen in the Figure 2 graph.
+
+Assessing the R^2^ values of both regressions, we can assume that there is a low measure of fit between our variables.
+
+#### Reduced Form Regressions:
+```{python}
+pf.etable([reduced_form_90, reduced_form_15], omit_stats='all', se=True, style='latex')
+```
+
+Comparing the reduced form regressions, the 1970-1990 and 1991-2015 rgression coefficients of total tax on sales is -0.038 and -0.197 respectively. These coefficients indicate that in both time periods, increasing total tax led to a small decrease in sales of cigaretttes.
+
+Assessing the R^2^ values of both regressions, we can assume that there is a low measure of fit between our variables.
+
+### Conclusion
+
+Using the regression coefficients as an indicator for price changes and considering the sharp decreases in cigarette packs sold as shown in Figure 5, it can be inferred that price is not what is driving cigarette sales down. Price changes are not what driving sales down; rather, I believe that the anti-smoking social movement was the main driver.
+
+After conducting these regressions, I put further weight into the impact of the anti-smoking social movement on cigarette sales. An interesting next experiment would be to try and quantify the impact that the movement had on cigarette sales, and compare it to the regressions above. 
