@@ -71,7 +71,7 @@ plt.show()
 {{< pagebreak >}}
 ### 2. Average Price per Pack, 1970-2018 (in 2012 dolalrs)
 
-While both tax and price per pack have risen in past years, price per pack has grown exponentially more. This makes sense as the government has tried to use economic disincentives to sway people away from cigarettes. 
+While both tax and price per pack have risen in past years, price per pack has grown at an exponential rate. This makes sense as the government has tried to use economic disincentives to sway people away from cigarettes. 
 ```{python}
 #| echo: false
 #| warning: false
@@ -139,9 +139,9 @@ plt.show()
 {{< pagebreak >}}
 
 ### 5. Comparison of trends between these 10 states:
-Contrasting the 10 states, it is easier to see the differences between the states with the highest taxes and those with the lowest. These graphs do show some indication that increasing the tax burden might decrease the number of packs per person, but there are many outside variables that have not been taken into account.
+Contrasting the 10 states, the differing scales mentioned above are clearer. These graphs do show some indication that increasing the tax burden might decrease the number of packs per person, but there are many outside variables that have not been taken into account.
 
-From this graph, we can extrapolate that across the country, cigarette sales decreased at a significant rate.
+From this graph, we can extrapolate that across the country, cigarette sales have been decreasing at a significant rate.
 
 ```{python}
 #| echo: false
@@ -218,7 +218,7 @@ iv_70_90 = pf.feols('log_sales ~ 1 | log_price ~ log_total_tax', data=df_70_90)
 pf.etable(iv_70_90, omit_stats='all', se=True, style='latex')
 ```
 
-After switching from an OLS regression to using the log of Federal and State cigarette tax as an instrumental variable, the regression coefficient of price is -0.867. This is very similiar to what we got when running the OLS regression. Taking into account the standard error, we can assume that they are telling us the same result. As discussed later, however, neither regression should be trusted as accurate. 
+After switching from an OLS regression to using the total of Federal and State cigarette tax as an instrumental variable, the regression coefficient of price is -0.867. This is very similiar to what we got when running the OLS regression. Taking into account the standard error, we can assume that they are telling us the same result. As discussed later, however, neither regression should be trusted as accurate. 
 
 Using IV yielded a different regression result as there is some model-accuracy lost when using an insturmental variable rather than the target variable. A perfect insturmental variable would yield the same result as the original model, but there are many outside variables that could influence the relationship of total tax on price. 
 
@@ -289,14 +289,14 @@ The 1970-1990 OLS (1), however, has an R^2^ of 0.294. This indicates that for th
 pf.etable([iv_70_90, iv_91_15], omit_stats='all', se=True, style='latex')
 ```
 
-Using total tax on cigarettes as an instrumental varibale, both regressions yeilded a negative coefficient. The coefficient for 1991-2015 (2) is larger at -1.169 than 1970-1990's of -0.867.
+Using total tax on cigarettes as an instrumental varibale, both regressions yielded a negative coefficient. The coefficient for 1991-2015 (2) is larger at -1.169 than 1970-1990's of -0.867.
 
-Looking at the graph in point 2, there is a clear exponential increase in the slope of the average price of cigarettes. The increases in average price per pack from 1991-2015 are much higher than the increases between 1970-1990. 
+Looking at Figure 2 from earlier, there is a clear exponential increase in the slope of the average price of cigarettes. The increases in average price per pack from 1991-2015 are much higher than the increases between 1970-1990. 
 
 In that same graph, the increase in average tax does not increase significantly until 2000. This leads me to believe that total tax, as collected and calculated here, is not an accurate instrumental variable for the increasing price per pack.
 
 
-### Comparing First Stage and Reduced-Form Regressions from 1970 - 1990 and 1991 - 2015
+### 10.3 Comparing First Stage and Reduced-Form Regressions from 1970 - 1990 and 1991 - 2015
 #### First Stage Regressions:
 ```{python}
 pf.etable(
